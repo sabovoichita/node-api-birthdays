@@ -14,7 +14,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "teams"
+  database: "birthdays"
 });
 
 function getConnection(res) {
@@ -39,7 +39,7 @@ function getConnection(res) {
 }
 
 /**
- * run this before first USAGE to create teams TABLE
+ * run this before first USAGE to create birthdays TABLE
  */
 router.get("/install", async function (req, res, next) {
   try {
@@ -61,7 +61,7 @@ router.get("/install", async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   try {
     const connection = await getConnection(res);
-    const sql = `SELECT id, promotion, members, name, url FROM teams`;
+    const sql = `SELECT id, name, contact, age, url, DOB FROM birthdays`;
     connection.query(sql, function (err, results) {
       if (err) {
         console.error(err);
@@ -79,15 +79,16 @@ router.get("/", async function (req, res, next) {
  *
  */
 router.post("/create", async function (req, res, next) {
-  const promotion = req.body.promotion;
-  const members = req.body.members;
   const name = req.body.name;
+  const contact = req.body.contact;
+  const age = req.body.age;
   const url = req.body.url;
+  const DOB = req.body.DOB;
 
   try {
     const connection = await getConnection(res);
-    const sql = `INSERT INTO teams (id, promotion, members, name, url) VALUES (NULL, ?, ?, ?, ?);`;
-    connection.query(sql, [promotion, members, name, url], function (err, results) {
+    const sql = `INSERT INTO birthdays (id, name, contact, age, url, DOB) VALUES (NULL, ?, ?, ?, ?);`;
+    connection.query(sql, [name, contact, age, url, DOB], function (err, results) {
       if (err) throw err;
       const id = results.insertId;
       connection.release();
@@ -107,7 +108,7 @@ router.delete("/delete", async function (req, res, next) {
 
   try {
     const connection = await getConnection(res);
-    const sql = `DELETE FROM teams WHERE id=?`;
+    const sql = `DELETE FROM birthdays WHERE id=?`;
     connection.query(sql, [id], function (err, results) {
       if (err) throw err;
       connection.release();
@@ -121,15 +122,16 @@ router.delete("/delete", async function (req, res, next) {
  */
 router.put("/update", async function (req, res, next) {
   const id = req.body.id;
-  const members = req.body.members;
   const name = req.body.name;
+  const contact = req.body.contact;
+  const age = req.body.age;
   const url = req.body.url;
-  const promotion = req.body.promotion;
+  const DOB = req.body.DOB;
 
   try {
     const connection = await getConnection(res);
-    const sql = `UPDATE teams SET promotion=?, members=?, name=?, url=? WHERE id=?`;
-    connection.query(sql, [promotion, members, name, url, id], function (err, results) {
+    const sql = `UPDATE birthdays SET name=?, contact=?, age=?, url=?,DOB=? WHERE id=?`;
+    connection.query(sql, [name, contact, age, url, DOB, id], function (err, results) {
       if (err) throw err;
       connection.release();
       res.json({ success: true });
