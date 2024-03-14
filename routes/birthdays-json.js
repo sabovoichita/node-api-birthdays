@@ -21,7 +21,7 @@ router.post("/create", function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.DOB;
+  const DOB = req.body.dob;
 
   const birthdays = getBirthdays();
   const id = Math.random().toString(36).substring(7) + new Date().getTime();
@@ -32,7 +32,7 @@ router.post("/create", function (req, res, next) {
     contact,
     age,
     url,
-    DOB
+    dob
   });
 
   setBirthdays(birthdays);
@@ -63,7 +63,7 @@ router.put("/update", function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.DOB;
+  const DOB = req.body.dob;
 
   const birthdays = getBirthdays();
 
@@ -73,7 +73,7 @@ router.put("/update", function (req, res, next) {
     birthday.contact = contact;
     birthday.age = age;
     birthday.url = url;
-    birthday.DOB = DOB;
+    birthday.dob = dob;
   }
 
   setBirthdays(birthdays);

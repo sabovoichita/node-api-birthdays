@@ -83,12 +83,12 @@ router.post("/create", async function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.DOB;
+  const DOB = req.body.dob;
 
   try {
     const connection = await getConnection(res);
-    const sql = `INSERT INTO birthdays (id, name, contact, age, url, DOB) VALUES (NULL, ?, ?, ?, ?);`;
-    connection.query(sql, [name, contact, age, url, DOB], function (err, results) {
+    const sql = `INSERT INTO birthdays (id, name, contact, age, url, dob) VALUES (NULL, ?, ?, ?, ?);`;
+    connection.query(sql, [name, contact, age, url, dob], function (err, results) {
       if (err) throw err;
       const id = results.insertId;
       connection.release();
@@ -126,12 +126,12 @@ router.put("/update", async function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.DOB;
+  const DOB = req.body.dob;
 
   try {
     const connection = await getConnection(res);
-    const sql = `UPDATE birthdays SET name=?, contact=?, age=?, url=?,DOB=? WHERE id=?`;
-    connection.query(sql, [name, contact, age, url, DOB, id], function (err, results) {
+    const sql = `UPDATE birthdays SET name=?, contact=?, age=?, url=?,dob=? WHERE id=?`;
+    connection.query(sql, [name, contact, age, url, dob, id], function (err, results) {
       if (err) throw err;
       connection.release();
       res.json({ success: true });
