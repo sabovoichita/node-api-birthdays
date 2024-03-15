@@ -61,7 +61,7 @@ router.get("/install", async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   try {
     const connection = await getConnection(res);
-    const sql = `SELECT id, name, contact, age, url, DOB FROM birthdays`;
+    const sql = `SELECT id, name, contact, age, url, dob FROM birthdays`;
     connection.query(sql, function (err, results) {
       if (err) {
         console.error(err);
@@ -83,7 +83,7 @@ router.post("/create", async function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.dob;
+  const dob = req.body.dob;
 
   try {
     const connection = await getConnection(res);
@@ -126,7 +126,7 @@ router.put("/update", async function (req, res, next) {
   const contact = req.body.contact;
   const age = req.body.age;
   const url = req.body.url;
-  const DOB = req.body.dob;
+  const dob = req.body.dob;
 
   try {
     const connection = await getConnection(res);
