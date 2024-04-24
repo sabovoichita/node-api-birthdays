@@ -1,5 +1,5 @@
 {
-  "name": "node-api",
+  "name": "node-api-birthdays",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -26,5 +26,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "description": "Node JS CRUD API Example",
+  "main": "app.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
