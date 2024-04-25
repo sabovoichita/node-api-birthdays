@@ -1,5 +1,5 @@
 {
-  "name": "node-api-birthdays",
+  "name": "node-api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "doctoc": "doctoc README.md",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "data": "git checkout HEAD^ data/birhdays.json"
+    "data": "git checkout HEAD^ data/birthdays.json"
   },
   "nodemonConfig": {
     "ignore": [
@@ -26,10 +26,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  },
-  "description": "Node JS CRUD API Example",
-  "main": "app.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
