@@ -4,7 +4,7 @@
     "name": "Dan Sergiu",
     "contact": "Spain",
     "age": "39",
-    "url": "https://www.facebook.com/dansergiu.truscai",
+    "url": "https://www.facebook.com/",
     "dob": "1984/10/02"
   },
   {
@@ -100,7 +100,23 @@
     "name": "Claudia Oros",
     "contact": "Spain",
     "age": "38",
-    "url": "https://www.facebook.s",
+    "url": "https://www.facebook.com",
     "dob": "1980/04/23"
+  },
+  {
+    "id": "i83641714036489793",
+    "name": "Ana Maria Truscai",
+    "contact": "Spain",
+    "age": "42",
+    "url": "https://www.facebook.com/",
+    "dob": "1976/05/19"
+  },
+  {
+    "id": "4hgg2g1714036558027",
+    "name": "Mihai Bogdan",
+    "contact": "Romania",
+    "age": "41",
+    "url": "https://www.facebook.com/",
+    "dob": "1983/05/05"
   }
 ]
