@@ -2,15 +2,15 @@ var express = require("express");
 var router = express.Router();
 var fs = require("fs");
 
-const DATA_PATH = "data/teams.json";
+const DATA_PATH = "data/recipes.json";
 
 /**
  *
  */
 router.get("/", function (req, res, next) {
   console.log("reading file %o", DATA_PATH);
-  const teams = getTeams();
-  res.json(teams);
+  const recipes = getRecipes();
+  res.json(recipes);
 });
 
 /**
@@ -22,10 +22,10 @@ router.post("/create", function (req, res, next) {
   const name = req.body.name;
   const url = req.body.url;
 
-  const teams = getTeams();
+  const recipes = getRecipes();
   const id = Math.random().toString(36).substring(7) + new Date().getTime();
 
-  teams.push({
+  recipes.push({
     id,
     promotion,
     members,
@@ -33,7 +33,7 @@ router.post("/create", function (req, res, next) {
     url
   });
 
-  setTeams(teams);
+  setRecipes(recipes);
 
   res.json({ success: true, id });
   res.status(201);
@@ -45,9 +45,9 @@ router.post("/create", function (req, res, next) {
 router.delete("/delete", function (req, res, next) {
   const id = req.body.id;
 
-  const teams = getTeams().filter(team => team.id != id);
+  const recipes = getRecipes().filter(recipe => recipe.id != id);
 
-  setTeams(teams);
+  setRecipes(recipes);
 
   res.json({ success: true });
 });
@@ -62,28 +62,28 @@ router.put("/update", function (req, res, next) {
   const name = req.body.name;
   const url = req.body.url;
 
-  const teams = getTeams();
+  const recipes = getRecipes();
 
-  const team = teams.find(team => team.id == id);
-  if (team) {
-    team.promotion = promotion;
-    team.members = members;
-    team.name = name;
-    team.url = url;
+  const recipe = recipes.find(recipe => recipe.id == id);
+  if (recipe) {
+    recipe.promotion = promotion;
+    recipe.members = members;
+    recipe.name = name;
+    recipe.url = url;
   }
 
-  setTeams(teams);
+  setRecipes(recipes);
 
   res.json({ success: true });
 });
 
-function getTeams() {
+function getRecipes() {
   const content = fs.readFileSync(DATA_PATH);
   return JSON.parse(content);
 }
 
-function setTeams(teams) {
-  const content = JSON.stringify(teams, null, 2);
+function setRecipes(recipes) {
+  const content = JSON.stringify(recipes, null, 2);
   fs.writeFileSync(DATA_PATH, content);
 }
 
