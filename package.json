@@ -7,7 +7,11 @@
     "doctoc": "doctoc README.md",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
+<<<<<<< HEAD
     "data": "git checkout HEAD^ data/recipes.json"
+=======
+    "data": "git checkout HEAD^ data/birthdays.json"
+>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
   },
   "nodemonConfig": {
     "ignore": [

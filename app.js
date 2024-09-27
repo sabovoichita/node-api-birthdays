@@ -7,8 +7,13 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+<<<<<<< HEAD
 var recipesDBRouter = require("./routes/recipes-db");
 var recipesRouter = require("./routes/recipes-json");
+=======
+var birthdaysDBRouter = require("./routes/birthdays-db");
+var birthdaysRouter = require("./routes/birthdays-json");
+>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
 
 var app = express();
 
@@ -25,7 +30,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+<<<<<<< HEAD
 app.use("/recipes", recipesDBRouter);
+=======
+app.use("/birthdays", birthdaysDBRouter);
+>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
 
 function processingSimulate(req, res, next) {
   const wait = 500 + Math.floor(Math.random() * 11) * 100;
@@ -34,8 +43,13 @@ function processingSimulate(req, res, next) {
     next();
   }, wait);
 }
+<<<<<<< HEAD
 app.use("/recipes-json", processingSimulate, recipesRouter);
 //app.use("/recipes-json", recipesRouter);
+=======
+app.use("/birthdays-json", processingSimulate, birthdaysRouter);
+//app.use("/birthdays-json", birthdaysRouter);
+>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
