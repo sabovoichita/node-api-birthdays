@@ -3,38 +3,29 @@ var router = express.Router();
 var fs = require("fs");
 var mysql = require("mysql");
 
-const DATA_PATH = "data/structure.sql";
+const DATA_PATH = "data/structure.sql"; // Path to your SQL schema
 
 /**
- * IMPORTANT: add content type headers to be able to use req.body.*
-  headers: {"Content-Type": "application/json"},
+ * IMPORTANT: Add content type headers to be able to use req.body.*
+ * headers: {"Content-Type": "application/json"}
  */
 
+// Create MySQL connection pool
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-<<<<<<<< HEAD:routes/recipes-db.js
-  database: "recipes"
-========
-  database: "birthdays"
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
+  database: "recipes" // Updated to use the 'recipes' database
 });
 
+// Helper function to get MySQL connection from the pool
 function getConnection(res) {
   return new Promise((resolve, reject) => {
     pool.getConnection(function (err, connection) {
       if (err) {
-        console.error("connection failed", err);
-        res.render("error", {
-          status: err.status || 500,
-          message: "Connection failed",
-          error: {
-            status: "Check API logs"
-          }
-          //error: err
-        });
-        reject("mysql connection failed", err);
+        console.error("Connection failed", err);
+        res.status(500).json({ message: "Connection failed", error: err });
+        reject("MySQL connection failed", err);
         return;
       }
       resolve(connection);
@@ -43,140 +34,125 @@ function getConnection(res) {
 }
 
 /**
-<<<<<<<< HEAD:routes/recipes-db.js
- * run this before first USAGE to create recipes TABLE
-========
- * run this before first USAGE to create birthdays TABLE
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
+ * Run this before first USAGE to create the 'recipes' TABLE
  */
 router.get("/install", async function (req, res, next) {
   try {
     const connection = await getConnection(res);
-    const sql = fs.readFileSync(DATA_PATH, "utf8");
+    const sql = fs.readFileSync(DATA_PATH, "utf8"); // Reading SQL schema from file
     connection.query(sql, function (err, results) {
       if (err) {
         console.error("Install failed", err);
+        res.status(500).json({ error: err });
+        connection.release();
+        return;
       }
       connection.release();
-      res.redirect("/");
+      res.status(200).json({ message: "Database installed successfully!" });
     });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 /**
- *
+ * GET all recipes
  */
 router.get("/", async function (req, res, next) {
   try {
     const connection = await getConnection(res);
-<<<<<<<< HEAD:routes/recipes-db.js
-    const sql = `SELECT id, title, image, ingredients, link FROM recipes`;
-========
-    const sql = `SELECT id, name, contact, age, url, dob FROM birthdays`;
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
+    const sql = `SELECT id, title, image, ingredients, link FROM recipes`; // Select recipes data
     connection.query(sql, function (err, results) {
       if (err) {
         console.error(err);
         connection.release();
-        res.send(err);
+        res.status(500).json({ error: err });
         return;
       }
       connection.release();
-      res.json(results);
+      res.status(200).json(results);
     });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 /**
- *
+ * POST to create a new recipe
  */
 router.post("/create", async function (req, res, next) {
-<<<<<<<< HEAD:routes/recipes-db.js
-  const title = req.body.title;
-  const image = req.body.image;
-  const ingredients = req.body.ingredients;
-  const link = req.body.link;
+  const { title, image, ingredients, link } = req.body; // Extracting recipe data from request body
 
   try {
     const connection = await getConnection(res);
     const sql = `INSERT INTO recipes (id, title, image, ingredients, link) VALUES (NULL, ?, ?, ?, ?);`;
     connection.query(sql, [title, image, ingredients, link], function (err, results) {
-========
-  const name = req.body.name;
-  const contact = req.body.contact;
-  const age = req.body.age;
-  const url = req.body.url;
-  const dob = req.body.dob;
-
-  try {
-    const connection = await getConnection(res);
-    const sql = `INSERT INTO birthdays (id, name, contact, age, url, dob) VALUES (NULL, ?, ?, ?, ?);`;
-    connection.query(sql, [name, contact, age, url, dob], function (err, results) {
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
-      if (err) throw err;
-      const id = results.insertId;
+      if (err) {
+        console.error(err);
+        connection.release();
+        res.status(500).json({ error: err });
+        return;
+      }
+      const id = results.insertId; // Get the newly inserted recipe ID
       connection.release();
-      res.json({
-        success: true,
-        id
-      });
+      res.status(201).json({ success: true, id });
     });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 /**
- *
+ * DELETE a recipe by ID
  */
 router.delete("/delete", async function (req, res, next) {
-  const id = req.body.id;
+  const { id } = req.body; // Get the recipe ID to delete
 
   try {
     const connection = await getConnection(res);
-<<<<<<<< HEAD:routes/recipes-db.js
-    const sql = `DELETE FROM recipes WHERE id=?`;
-========
-    const sql = `DELETE FROM birthdays WHERE id=?`;
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
+    const sql = `DELETE FROM recipes WHERE id = ?`;
     connection.query(sql, [id], function (err, results) {
-      if (err) throw err;
+      if (err) {
+        console.error(err);
+        connection.release();
+        res.status(500).json({ error: err });
+        return;
+      }
       connection.release();
-      res.json({ success: true });
+      res.status(200).json({ success: true });
     });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 /**
- *
+ * PUT to update a recipe by ID
  */
 router.put("/update", async function (req, res, next) {
-  const id = req.body.id;
-<<<<<<<< HEAD:routes/recipes-db.js
-  const image = req.body.image;
-  const ingredients = req.body.ingredients;
-  const link = req.body.link;
-  const title = req.body.title;
+  const { id, title, image, ingredients, link } = req.body; // Get the recipe data to update
 
   try {
     const connection = await getConnection(res);
-    const sql = `UPDATE recipes SET title=?, image=?, ingredients=?, link=? WHERE id=?`;
+    const sql = `UPDATE recipes SET title = ?, image = ?, ingredients = ?, link = ? WHERE id = ?`;
     connection.query(sql, [title, image, ingredients, link, id], function (err, results) {
-========
-  const name = req.body.name;
-  const contact = req.body.contact;
-  const age = req.body.age;
-  const url = req.body.url;
-  const dob = req.body.dob;
-
-  try {
-    const connection = await getConnection(res);
-    const sql = `UPDATE birthdays SET name=?, contact=?, age=?, url=?,dob=? WHERE id=?`;
-    connection.query(sql, [name, contact, age, url, dob, id], function (err, results) {
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-db.js
-      if (err) throw err;
+      if (err) {
+        console.error(err);
+        connection.release();
+        res.status(500).json({ error: err });
+        return;
+      }
       connection.release();
-      res.json({ success: true });
+      res.status(200).json({ success: true });
     });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 module.exports = router;

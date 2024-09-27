@@ -5,22 +5,18 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+// Route imports
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-<<<<<<< HEAD
 var recipesDBRouter = require("./routes/recipes-db");
-var recipesRouter = require("./routes/recipes-json");
-=======
-var birthdaysDBRouter = require("./routes/birthdays-db");
-var birthdaysRouter = require("./routes/birthdays-json");
->>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
+var recipesJSONRouter = require("./routes/recipes-json");
 
 var app = express();
 
-// view engine setup
+// View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 
+// Enable CORS for all origins
 app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
 app.use(express.json());
@@ -28,14 +24,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-<<<<<<< HEAD
-app.use("/recipes", recipesDBRouter);
-=======
-app.use("/birthdays", birthdaysDBRouter);
->>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
+// Main routes setup
+app.use("/", indexRouter); // Handles root path
+app.use("/recipes", recipesDBRouter); // Handles database-related operations (MySQL)
+app.use("/recipes-json", recipesJSONRouter); // Handles JSON file-based recipes
 
+// Simulate some processing delay
 function processingSimulate(req, res, next) {
   const wait = 500 + Math.floor(Math.random() * 11) * 100;
   setTimeout(() => {
@@ -43,26 +37,20 @@ function processingSimulate(req, res, next) {
     next();
   }, wait);
 }
-<<<<<<< HEAD
-app.use("/recipes-json", processingSimulate, recipesRouter);
-//app.use("/recipes-json", recipesRouter);
-=======
-app.use("/birthdays-json", processingSimulate, birthdaysRouter);
-//app.use("/birthdays-json", birthdaysRouter);
->>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c
+app.use("/recipes-json", processingSimulate, recipesJSONRouter);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
+  // Provide error details in development environment
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
+  // Render the error page
   res.status(err.status || 500);
   res.render("error");
 });

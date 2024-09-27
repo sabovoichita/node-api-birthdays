@@ -2,141 +2,91 @@ var express = require("express");
 var router = express.Router();
 var fs = require("fs");
 
-<<<<<<<< HEAD:routes/recipes-json.js
 const DATA_PATH = "data/recipes.json";
-========
-const DATA_PATH = "data/birthdays.json";
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
 
 /**
- *
+ * GET all recipes
  */
 router.get("/", function (req, res, next) {
-  console.log("reading file %o", DATA_PATH);
-<<<<<<<< HEAD:routes/recipes-json.js
+  console.log("Reading file %o", DATA_PATH);
   const recipes = getRecipes();
   res.json(recipes);
-========
-  const birthdays = getBirthdays();
-  res.json(birthdays);
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
 });
 
 /**
- *
+ * POST to create a new recipe
  */
 router.post("/create", function (req, res, next) {
-  const name = req.body.name;
-  const contact = req.body.contact;
-  const age = req.body.age;
-  const url = req.body.url;
-  const dob = req.body.dob;
+  const { title, image, alt, ingredients, link } = req.body; // Extract recipe data from request
 
-<<<<<<<< HEAD:routes/recipes-json.js
   const recipes = getRecipes();
-  const id = Math.random().toString(36).substring(7) + new Date().getTime();
+  const id = Math.random().toString(36).substring(7) + new Date().getTime(); // Generate unique ID for the recipe
 
+  // Add new recipe with correct properties
   recipes.push({
-========
-  const birthdays = getBirthdays();
-  const id = Math.random().toString(36).substring(7) + new Date().getTime();
-
-  birthdays.push({
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
     id,
-    name,
-    contact,
-    age,
-    url,
-    dob
+    title,
+    image,
+    alt,
+    ingredients,
+    link
   });
 
-<<<<<<<< HEAD:routes/recipes-json.js
-  setRecipes(recipes);
-========
-  setBirthdays(birthdays);
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
+  setRecipes(recipes); // Save updated recipes
 
-  res.json({ success: true, id });
-  res.status(201);
+  res.status(201).json({ success: true, id }); // Respond with success and the new recipe's ID
 });
 
 /**
- *
+ * DELETE a recipe by ID
  */
 router.delete("/delete", function (req, res, next) {
-  const id = req.body.id;
+  const { id } = req.body; // Extract recipe ID from the request body
 
-<<<<<<<< HEAD:routes/recipes-json.js
-  const recipes = getRecipes().filter(recipe => recipe.id != id);
+  // Filter out the recipe that matches the provided ID
+  const recipes = getRecipes().filter(recipe => recipe.id !== id);
 
-  setRecipes(recipes);
-========
-  const birthdays = getBirthdays().filter(birthday => birthday.id != id);
+  setRecipes(recipes); // Save the updated recipes list
 
-  setBirthdays(birthdays);
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
-
-  res.json({ success: true });
+  res.json({ success: true }); // Respond with success
 });
 
 /**
- *
+ * PUT to update a recipe by ID
  */
 router.put("/update", function (req, res, next) {
-  const id = req.body.id;
-  const name = req.body.name;
-  const contact = req.body.contact;
-  const age = req.body.age;
-  const url = req.body.url;
-  const dob = req.body.dob;
+  const { id, title, image, alt, ingredients, link } = req.body; // Extract data for update
 
-<<<<<<<< HEAD:routes/recipes-json.js
   const recipes = getRecipes();
 
-  const recipe = recipes.find(recipe => recipe.id == id);
+  // Find the recipe to update
+  const recipe = recipes.find(recipe => recipe.id === id);
   if (recipe) {
-    recipe.promotion = promotion;
-    recipe.members = members;
-    recipe.name = name;
-    recipe.url = url;
+    recipe.title = title;
+    recipe.image = image;
+    recipe.alt = alt;
+    recipe.ingredients = ingredients;
+    recipe.link = link;
   }
 
-  setRecipes(recipes);
-========
-  const birthdays = getBirthdays();
+  setRecipes(recipes); // Save the updated recipe
 
-  const birthday = birthdays.find(birthday => birthday.id == id);
-  if (birthday) {
-    birthday.name = name;
-    birthday.contact = contact;
-    birthday.age = age;
-    birthday.url = url;
-    birthday.dob = dob;
-  }
-
-  setBirthdays(birthdays);
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
-
-  res.json({ success: true });
+  res.json({ success: true }); // Respond with success
 });
 
-<<<<<<<< HEAD:routes/recipes-json.js
+/**
+ * Helper function to get all recipes
+ */
 function getRecipes() {
-========
-function getBirthdays() {
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
   const content = fs.readFileSync(DATA_PATH);
   return JSON.parse(content);
 }
 
-<<<<<<<< HEAD:routes/recipes-json.js
+/**
+ * Helper function to save recipes
+ */
 function setRecipes(recipes) {
-  const content = JSON.stringify(recipes, null, 2);
-========
-function setBirthdays(birthdays) {
-  const content = JSON.stringify(birthdays, null, 2);
->>>>>>>> 6debc845ab2ade0ee4d639887c926c44b47c1e1c:routes/birthdays-json.js
+  const content = JSON.stringify(recipes, null, 2); // Pretty print with 2 spaces for formatting
   fs.writeFileSync(DATA_PATH, content);
 }
 
